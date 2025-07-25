@@ -2,8 +2,11 @@ from flask import Flask, request, jsonify
 import json
 import os
 from algorithm.JobShopScheduler import JobShopScheduler
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 
 BENCHMARKS_PATH = os.path.join(os.path.dirname(__file__), 'benchmarks', 'benchmarks.json')
 with open(BENCHMARKS_PATH, 'r') as f:
