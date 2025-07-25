@@ -54,8 +54,8 @@ def main():
     scheduler1.enable_travel_time = 1
     scheduler1.create_txt_file = 0
     
-    scheduler1.stagnation_limit = 200
-    scheduler1.activate_termination = 0
+    scheduler1.stagnation_limit = 50
+    scheduler1.activate_termination = 1
     
     print(scheduler1.operation_data)
     for _ in range(scheduler1.runs):

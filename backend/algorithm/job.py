@@ -1,5 +1,3 @@
-# number of jobs
-
 
 class Job:
     def __init__(self, job_number, n):

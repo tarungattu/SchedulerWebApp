@@ -7,15 +7,15 @@ import time
 import os
 import json
 
-from job import Job
-from machine import Machine
-from operation import Operation
-from chromosome import Chromosome
+from .job import Job
+from .machine import Machine
+from .operation import Operation
+from .chromosome import Chromosome
 from datetime import datetime
-from amr import AMR
+from .amr import AMR
 
 
-import distances
+from . import distances
 import benchmarks
 
 import traceback
@@ -37,8 +37,8 @@ class JobShopScheduler():
         self.ptime_data = ptime_data
         self.stagnation_limit = 50
         
-        self.activate_termination = 0
-        self.enable_travel_time = 0
+        self.activate_termination = 1
+        self.enable_travel_time = 1
         self.display_convergence = 0
         self.display_schedule = 1
         self.create_txt_file = 0
@@ -46,7 +46,7 @@ class JobShopScheduler():
         self.runs = 1
         
         self.distance_matrix = None
-        self.save_file_directory = 'E:\\Python\\JobShopGA\\Results\\default'
+        self.save_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
         
         if self.enable_travel_time:
             self.distance_matrix = distances.four_machine_matrix
@@ -442,18 +442,14 @@ class JobShopScheduler():
         plt.tight_layout()
         
         if self.create_txt_file:
-            # CHANGE DIRECTORY FOR SAVING FIGURE
-            
-            folder_name = "run results"
-        
-            # Check if the folder exists,   if not, create it
+            # Use the flexible save directory
+            folder_name = self.save_dir
+
+            # Check if the folder exists, if not, create it
             if not os.path.exists(folder_name):
                 os.makedirs(folder_name)
-                
-                
-            timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-            filename = os.path.join(folder_name, self.GetUniqueFileName("GA", "png"))
-            
+
+            filename = os.path.join(folder_name, "result.png")  # Fixed filename
             plt.savefig(filename)
         
 
@@ -767,24 +763,15 @@ class JobShopScheduler():
         return population
             
     def get_file(self, best_chromosome, processing_time, converged_at, xpoints, ypoints):
-        # Generate timestamp for filename
-        timestamp = time.strftime("%Y%m%d-%H%M%S")
-        filename = self.GetUniqueFileName("GA", "txt")
-        
-        if converged_at == 0:
-            converged_at = processing_time
+        # Use a fixed filename in the static directory
+        filename = "result.txt"
+        directory = self.save_dir  # static folder
 
-        # Define the folder name
-        directory = "run results"  # Folder for saving the file
-
-        # Check if folder exists, create if necessary
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        # Construct the full file path
         filepath = os.path.join(directory, filename)
 
-        # Write the contents to the file
         with open(filepath, 'w') as file:
             file.write(f"Welcome to main function at {datetime.now().strftime('%d-%m %H:%M:%S')}.{datetime.now().microsecond}\n")
             file.write(f"Population size: {self.N}\n")
