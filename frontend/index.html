@@ -416,6 +416,41 @@
     </div>
 
     <script>
+
+        // Load benchmark names into dropdown
+        fetch('benchmarks.json')
+            .then(response => response.json())
+            .then(data => {
+            const benchmarkSelect = document.getElementById('benchmarkSelect');
+            benchmarkSelect.innerHTML = ''; // Clear old options
+
+            // Populate options
+            for (let key in data) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = key;
+                benchmarkSelect.appendChild(option);
+            }
+
+            // Optional: auto-select the first benchmark and load its data
+            benchmarkSelect.value = Object.keys(data)[0];
+            loadBenchmarkData(data[benchmarkSelect.value]);
+
+            // Handle user selection
+            benchmarkSelect.addEventListener('change', () => {
+                const selectedData = data[benchmarkSelect.value];
+                loadBenchmarkData(selectedData);
+            });
+            });
+
+        // Function to use the benchmark data
+        function loadBenchmarkData(benchmark) {
+            // You can now use benchmark.machine_data and benchmark.ptime_data
+            console.log('Selected Benchmark:', benchmark);
+            
+            // Example: you might update a table, send to backend, etc.
+        }
+
         // Global variables
         let canvas = document.getElementById('warehouse-grid');
         let ctx = canvas.getContext('2d');
