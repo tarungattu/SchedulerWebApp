@@ -40,8 +40,8 @@ class JobShopScheduler():
         self.activate_termination = 1
         self.enable_travel_time = 1
         self.display_convergence = 0
-        self.display_schedule = 1
-        self.create_txt_file = 0
+        self.display_schedule = 0
+        self.create_txt_file = 1
         self.update_json_file = 0
         self.runs = 1
         
@@ -916,8 +916,8 @@ class JobShopScheduler():
             ypoints.append(best_chromosome.fitness)
             winners_list = survivors
             
-            if (t + 1) % 25 == 0:
-                print(f'At generation {t + 1}, best fitness :{best_chromosome.fitness}')
+            # if (t + 1) % 25 == 0:
+            #     print(f'At generation {t + 1}, best fitness :{best_chromosome.fitness}')
             
             
             
@@ -937,7 +937,7 @@ class JobShopScheduler():
         processing_time = end_time - start_time
         
         machine_seq_amrs, ptime_seq_amrs = self.get_sequences_in_amr(best_chromosome.amr_list)
-        print(machine_seq_amrs,'\n',ptime_seq_amrs)   
+        # print(machine_seq_amrs,'\n',ptime_seq_amrs)   
 
 
         # Update the job sequence list for each machine for best chromosome.
@@ -956,11 +956,11 @@ class JobShopScheduler():
         
         
         # print(f'best Cmax = {ypoints[N-1]}')
-        print(f'best Cmax = {best_chromosome.fitness}')
+        # print(f'best Cmax = {best_chromosome.fitness}')
         
-        print('random generated numbers:',best_chromosome.encoded_list)
-        print(f'ranked list : {best_chromosome.ranked_list}\n operation_index :{best_chromosome.operation_index_list},\n operation object{best_chromosome.operation_schedule}\n')
-        print(f'machine sequence: {best_chromosome.machine_sequence}\n ptime sequence: {best_chromosome.ptime_sequence}\n Cmax: {best_chromosome.Cmax}')
+        # print('random generated numbers:',best_chromosome.encoded_list)
+        # print(f'ranked list : {best_chromosome.ranked_list}\n operation_index :{best_chromosome.operation_index_list},\n operation object{best_chromosome.operation_schedule}\n')
+        # print(f'machine sequence: {best_chromosome.machine_sequence}\n ptime sequence: {best_chromosome.ptime_sequence}\n Cmax: {best_chromosome.Cmax}')
 
 
 

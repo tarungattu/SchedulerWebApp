@@ -3,10 +3,10 @@ import json
 import os
 from algorithm.JobShopScheduler import JobShopScheduler
 from flask_cors import CORS
+import numpy as np
 
-app = Flask(__name__)
+app = Flask(__name__ , static_folder='static')
 CORS(app)
-
 
 BENCHMARKS_PATH = os.path.join(os.path.dirname(__file__), 'benchmarks', 'benchmarks.json')
 with open(BENCHMARKS_PATH, 'r') as f:
@@ -24,11 +24,11 @@ def chromosome_to_dict(chromo_obj):
         "encoded_list": chromo_obj.encoded_list,
         "ranked_list": chromo_obj.ranked_list,
         "operation_index_list": chromo_obj.operation_index_list,
-        "job_list": chromo_obj.job_list,
-        "amr_list": chromo_obj.amr_list,
-        "operation_schedule": chromo_obj.operation_schedule,
+        # "job_list": chromo_obj.job_list,
+        # "amr_list": chromo_obj.amr_list,
+        # "operation_schedule": chromo_obj.operation_schedule,
         "machine_sequence": chromo_obj.machine_sequence,
-        "machine_list": chromo_obj.machine_list,
+        # "machine_list": chromo_obj.machine_list,
         "ptime_sequence": chromo_obj.ptime_sequence,
         "Cmax": chromo_obj.Cmax,
         "penalty": chromo_obj.penalty,
@@ -87,9 +87,9 @@ def run_scheduler():
         if ptime_data is None:
             ptime_data = BENCHMARKS["pinedo"]["ptime_data"]
         
-    distance_matrix = req_data.get("distance_matrix")
+    distance_matrix = np.array(req_data.get("distance_matrix"))
     m = req_data.get("m", 4)
-    n = req_data.get("n", 4)
+    n = BENCHMARKS[benchmark_name]["n"]
     N = req_data.get("N", 200)
     T = req_data.get("T", 200)
     Pm = req_data.get("Pm", 0.5)
@@ -103,10 +103,10 @@ def run_scheduler():
     best_chromosome = JobShopScheduler.GeneticAlgorithm(scheduler1)
     dict_chromosome = chromosome_to_dict(best_chromosome)
     
-    
+    image_url = request.host_url.rstrip('/') + '/static/result.png'
     return jsonify({
         "chromosome": dict_chromosome,
-        "image_url": "/static/result.png"
+        "image_url": image_url
     })
 
 if __name__ == "__main__":
