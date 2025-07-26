@@ -34,7 +34,7 @@ const WarehouseApp = () => {
   useEffect(() => {
     const fetchBenchmarks = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/benchmarks`);
+        const response = await fetch(`/api/benchmarks`);
         const data = await response.json();
         if (data.success) {
           setAvailableBenchmarks(data.benchmarks);
@@ -285,7 +285,7 @@ const WarehouseApp = () => {
         stagnation_limit: gaParams.stagnationLimit
       };
       
-      const response = await fetch(`${API_BASE_URL}/run`, {
+      const response = await fetch(`/api/run`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -343,11 +343,12 @@ const WarehouseApp = () => {
       <div className="bg-gradient-to-r from-black to-gray-800 border-b border-gray-700 px-6 py-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-gradient-to-br from-white to-gray-300 rounded-lg flex items-center justify-center text-black font-black text-lg shadow-lg">
-            WM
+            JSSP
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Warehouse Matrix</h1>
-            <p className="text-sm text-gray-400">Interactive layout designer for genetic algorithm optimization</p>
+            <h1 className="text-2xl font-bold tracking-tight">Job Shop Scheduler UI</h1>
+            <p className="text-sm text-gray-400">Dynamic Job Shop layout designer for Genetic Algorthm Solver</p>
+            <a href="https://www.growingscience.com/ijiec/Vol16/IJIEC_2025_3.pdf">Read About the Scheduler Here!</a>
           </div>
         </div>
         <div className="bg-gradient-to-r from-green-400 to-green-500 px-5 py-3 rounded-lg flex items-center gap-3 font-semibold text-sm shadow-lg">
@@ -619,6 +620,14 @@ const WarehouseApp = () => {
           Machines: {machines.length} | Loading Dock: {loadingDock ? '✅' : '❌'} | Unloading Dock: {unloadingDock ? '✅' : '❌'}
         </span>
       </div>
+    {/* Footer */}
+    <footer className="bg-black border-t border-gray-800 px-5 py-4 text-center text-xs text-gray-400">
+      <div>
+        <a href="https://www.linkedin.com/in/tarun-gattu123" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">LinkedIn</a>
+        {' | '}
+        <a href="mailto:tarunrgattu@gmail.com" className="text-green-400 hover:underline">tarunrgattu@gmail.com</a>
+      </div>
+    </footer>
     </div>
   );
 };
