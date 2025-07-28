@@ -28,13 +28,13 @@ const WarehouseApp = () => {
 
   const canvasRef = useRef(null);
   const gridSize = 40;
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = 'https://flask-backend-l0s9.onrender.com';
 
   // Fetch available benchmarks from backend
   useEffect(() => {
     const fetchBenchmarks = async () => {
       try {
-        const response = await fetch(`/api/benchmarks`);
+        const response = await fetch(`https://flask-backend-l0s9.onrender.com/api/benchmarks`);
         const data = await response.json();
         if (data.success) {
           setAvailableBenchmarks(data.benchmarks);
@@ -285,7 +285,7 @@ const WarehouseApp = () => {
         stagnation_limit: gaParams.stagnationLimit
       };
       
-      const response = await fetch(`/api/run`, {
+      const response = await fetch(`https://flask-backend-l0s9.onrender.com/api/run`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

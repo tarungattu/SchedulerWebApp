@@ -6,7 +6,7 @@ from flask_cors import CORS
 import numpy as np
 
 app = Flask(__name__ , static_folder='static')
-CORS(app)
+CORS(app, origins=["http://localhost:3000", "https://react-client-p2v3.onrender.com"])
 
 BENCHMARKS_PATH = os.path.join(os.path.dirname(__file__), 'benchmarks', 'benchmarks.json')
 with open(BENCHMARKS_PATH, 'r') as f:
