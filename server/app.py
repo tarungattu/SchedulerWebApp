@@ -6,7 +6,7 @@ from flask_cors import CORS
 import numpy as np
 
 app = Flask(__name__ , static_folder='static')
-CORS(app, origins=["http://localhost:3000", "https://react-client-p2v3.onrender.com"])
+CORS(app, origins=["http://localhost:3000", "https://react-client-p2v3.onrender.com"], methods=["GET", "POST", "OPTIONS"])
 
 BENCHMARKS_PATH = os.path.join(os.path.dirname(__file__), 'benchmarks', 'benchmarks.json')
 with open(BENCHMARKS_PATH, 'r') as f:
@@ -69,8 +69,14 @@ def get_benchmarks():
 #     return jsonify({"message": "Distance matrix stored successfully."})
 
 # Run the scheduling algorithm
-@app.route("/api/run", methods=["POST"])
+@app.route("/api/run", methods=["POST", "OPTIONS"])
 def run_scheduler():
+    
+    if request.method == 'OPTIONS':
+        # Flask-CORS usually handles this automatically,
+        # but you can explicitly return a 200 response if needed.
+        return '', 200
+    
     ''' Sets GA parameters and runs the JobShopScheduler '''
     req_data = request.get_json()
 
