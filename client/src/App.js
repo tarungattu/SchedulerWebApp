@@ -378,20 +378,20 @@ const WarehouseApp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+    <div className="min-h-screen bg-black text-white flex flex-col" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
       {/* Header */}
       <div className="bg-gradient-to-r from-black to-gray-800 border-b border-gray-700 px-6 py-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-white to-gray-300 rounded-lg flex items-center justify-center text-black font-black text-lg shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-br from-white to-gray-300 rounded-lg flex items-center justify-center text-black font-black text-lg shadow-lg hover:scale-105 transition-transform duration-200">
             JSSP
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Job Shop Scheduler UI</h1>
             <p className="text-sm text-gray-400">Dynamic Job Shop layout designer for Genetic Algorithm Solver</p>
-            <a href="https://www.growingscience.com/ijiec/Vol16/IJIEC_2025_3.pdf" target="_blank">Read About the Scheduler Here!</a>
+            <a href="https://www.growingscience.com/ijiec/Vol16/IJIEC_2025_3.pdf" target="_blank" className="text-blue-400 hover:text-blue-300 transition-colors duration-200 underline">Read About the Scheduler Here!</a>
           </div>
         </div>
-        <div className="bg-gradient-to-r from-green-400 to-green-500 px-5 py-3 rounded-lg flex items-center gap-3 font-semibold text-sm shadow-lg">
+        <div className="bg-gradient-to-r from-green-400 to-green-500 px-5 py-3 rounded-lg flex items-center gap-3 font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300">
           <div className="w-6 h-6 bg-white bg-opacity-20 rounded flex items-center justify-center text-xs">🤖</div>
           <div>
             <div className="text-xs opacity-80">Active AMRs</div>
@@ -400,20 +400,20 @@ const WarehouseApp = () => {
         </div>
       </div>
 
-      <div className="flex h-screen">
+      <div className="flex flex-1">
         {/* Sidebar */}
         <div className="w-80 bg-gray-900 border-r border-gray-700 p-5 overflow-y-auto">
           {/* Benchmark Selection */}
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5">
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5 shadow-md hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-white mb-4 text-sm font-semibold uppercase tracking-wide opacity-90">📊 Benchmark Selection</h3>
             <div className="space-y-2">
               {availableBenchmarks.map((benchmark) => (
                 <div
                   key={benchmark}
-                  className={`p-3 border rounded-lg cursor-pointer transition-all ${
+                  className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 ${
                     selectedBenchmark === benchmark
-                      ? 'bg-gradient-to-r from-green-400 to-green-500 text-white border-green-400'
-                      : 'bg-black border-gray-700 hover:bg-gray-800 hover:border-green-400'
+                      ? 'bg-gradient-to-r from-green-400 to-green-500 text-white border-green-400 shadow-lg scale-105'
+                      : 'bg-black border-gray-700 hover:bg-gray-800 hover:border-green-400 hover:scale-102 hover:shadow-md'
                   }`}
                   onClick={() => {
                     setSelectedBenchmark(benchmark);
@@ -430,7 +430,7 @@ const WarehouseApp = () => {
           </div>
 
           {/* AMR Configuration */}
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5">
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5 shadow-md hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-white mb-4 text-sm font-semibold uppercase tracking-wide opacity-90">🤖 AMR Configuration</h3>
             <div className="mb-4">
               <label className="block mb-2 text-sm font-medium text-white opacity-90">Number of AMRs:</label>
@@ -438,7 +438,7 @@ const WarehouseApp = () => {
                 type="number"
                 value={gaParams.numAMRs}
                 onChange={(e) => setGaParams(prev => ({ ...prev, numAMRs: parseInt(e.target.value) }))}
-                className="w-full px-3 py-2 bg-black border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400 focus:ring-opacity-20"
+                className="w-full px-3 py-2 bg-black border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400 focus:ring-opacity-20 transition-all duration-200 hover:bg-gray-800"
                 min="1"
                 max="10"
               />
@@ -446,7 +446,7 @@ const WarehouseApp = () => {
           </div>
 
           {/* GA Parameters */}
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5">
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5 shadow-md hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-white mb-4 text-sm font-semibold uppercase tracking-wide opacity-90">🧬 Genetic Algorithm Parameters</h3>
             {[
               { key: 'crossoverProb', label: 'Crossover Probability (Pc)', step: 0.1, min: 0, max: 1 },
@@ -461,7 +461,7 @@ const WarehouseApp = () => {
                   type="number"
                   value={gaParams[key]}
                   onChange={(e) => setGaParams(prev => ({ ...prev, [key]: parseFloat(e.target.value) }))}
-                  className="w-full px-3 py-2 bg-black border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400 focus:ring-opacity-20"
+                  className="w-full px-3 py-2 bg-black border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400 focus:ring-opacity-20 transition-all duration-200 hover:bg-gray-800"
                   step={step}
                   min={min}
                   max={max}
@@ -471,31 +471,32 @@ const WarehouseApp = () => {
           </div>
 
           {/* Coordinates Display */}
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5">
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5 shadow-md hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-white mb-4 text-sm font-semibold uppercase tracking-wide opacity-90">📍 Current Coordinates</h3>
             {renderCoordinates()}
           </div>
 
           {/* Actions */}
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5">
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5 shadow-md hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-white mb-4 text-sm font-semibold uppercase tracking-wide opacity-90">⚡ Actions</h3>
             <div className="space-y-3">
               <button
                 onClick={generateDistanceMatrix}
-                className="w-full bg-gradient-to-r from-green-400 to-green-500 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all shadow-lg"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-green-400 to-green-500 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
-                Generate Distance Matrix
+                {isLoading ? 'Generating...' : 'Generate Distance Matrix'}
               </button>
               <button
                 onClick={runOptimization}
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {isLoading ? 'Running Optimization...' : 'Run GA Optimization'}
               </button>
               <button
                 onClick={clearLayout}
-                className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all shadow-lg"
+                className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out shadow-lg"
               >
                 Clear Layout
               </button>
@@ -503,16 +504,16 @@ const WarehouseApp = () => {
           </div>
 
           {/* Distance Matrix Display */}
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5">
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 mb-5 shadow-md hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-white mb-4 text-sm font-semibold uppercase tracking-wide opacity-90">📈 Distance Matrix</h3>
-            <div className="bg-black border border-gray-700 rounded-lg p-4 font-mono text-xs max-h-48 overflow-auto text-green-400">
+            <div className="bg-black border border-gray-700 rounded-lg p-4 font-mono text-xs max-h-48 overflow-auto text-green-400 shadow-inner">
               <pre>{renderDistanceMatrix()}</pre>
             </div>
           </div>
 
           {/* Optimization Results */}
           {schedulingResult && (
-            <div className="bg-gray-800 border border-gray-700 rounded-lg p-5">
+            <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 shadow-md hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-white mb-4 text-sm font-semibold uppercase tracking-wide opacity-90">🎯 Optimization Results</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -538,13 +539,13 @@ const WarehouseApp = () => {
           <div className="bg-gray-800 border-b border-gray-700 px-5 py-4 flex gap-3 items-center">
             <button
               onClick={addMachine}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all"
+              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out"
             >
               + Add Machine
             </button>
             <button
               onClick={removeMachine}
-              className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all"
+              className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out"
             >
               - Remove Machine
             </button>
@@ -554,13 +555,13 @@ const WarehouseApp = () => {
           </div>
 
           {/* Canvas Area */}
-          <div className="flex-1 p-6 bg-black overflow-y-auto">
+          <div className="flex-1 overflow-y-auto p-6 bg-black">
             <div className="mb-6">
               <canvas
                 ref={canvasRef}
                 width={800}
                 height={600}
-                className="border border-gray-700 rounded-lg bg-gray-800 cursor-crosshair"
+                className="border border-gray-700 rounded-lg bg-gray-800 cursor-crosshair shadow-2xl hover:shadow-3xl transition-shadow duration-300"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -569,7 +570,7 @@ const WarehouseApp = () => {
 
             {/* Optimization Result Visualization */}
             {schedulingResult && (
-              <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-fadeIn">
                 <h3 className="text-white mb-4 text-lg font-semibold flex items-center gap-2">
                   📊 Optimization Result Visualization
                   <span className="text-sm text-gray-400 font-normal">
@@ -577,13 +578,13 @@ const WarehouseApp = () => {
                   </span>
                 </h3>
                 
-                <div className="bg-black border border-gray-700 rounded-lg p-4">
+                <div className="bg-black border border-gray-700 rounded-lg p-4 shadow-inner">
                   <img
                     src={`${schedulingResult.image_url}?t=${Date.now()}`}
                     alt="Scheduling Optimization Result"
                     width={600}
                     height={600}
-                    className=" rounded-lg shadow-lg"
+                    className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
                     onError={(e) => {
                       e.target.style.display = 'none';
                       e.target.nextSibling.style.display = 'block';
@@ -601,15 +602,15 @@ const WarehouseApp = () => {
 
                 {/* Additional Result Details */}
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-black border border-gray-700 rounded-lg p-4 text-center">
+                  <div className="bg-black border border-gray-700 rounded-lg p-4 text-center shadow-md hover:shadow-lg transition-shadow duration-200">
                     <div className="text-2xl font-bold text-green-400">{schedulingResult.chromosome.Cmax}</div>
                     <div className="text-sm text-gray-400">Makespan (Cmax)</div>
                   </div>
-                  <div className="bg-black border border-gray-700 rounded-lg p-4 text-center">
+                  <div className="bg-black border border-gray-700 rounded-lg p-4 text-center shadow-md hover:shadow-lg transition-shadow duration-200">
                     <div className="text-2xl font-bold text-blue-400">{schedulingResult.chromosome.fitness?.toFixed(4) || 'N/A'}</div>
                     <div className="text-sm text-gray-400">Fitness Score</div>
                   </div>
-                  <div className="bg-black border border-gray-700 rounded-lg p-4 text-center">
+                  <div className="bg-black border border-gray-700 rounded-lg p-4 text-center shadow-md hover:shadow-lg transition-shadow duration-200">
                     <div className="text-2xl font-bold text-red-400">{schedulingResult.chromosome.penalty || 0}</div>
                     <div className="text-sm text-gray-400">Penalty</div>
                   </div>
@@ -617,7 +618,7 @@ const WarehouseApp = () => {
 
                 {/* Machine Sequence Display */}
                 {schedulingResult.chromosome.machine_sequence && (
-                  <div className="mt-4 bg-black border border-gray-700 rounded-lg p-4">
+                  <div className="mt-4 bg-black border border-gray-700 rounded-lg p-4 shadow-inner">
                     <h4 className="text-white font-semibold mb-2">Machine Sequence:</h4>
                     <div className="text-sm text-gray-300 font-mono">
                       {schedulingResult.chromosome.machine_sequence.map((seq, idx) => (
@@ -631,7 +632,7 @@ const WarehouseApp = () => {
 
                 {/* AMR Sequences Display */}
                 {schedulingResult.chromosome.amr_machine_sequences && (
-                  <div className="mt-4 bg-black border border-gray-700 rounded-lg p-4">
+                  <div className="mt-4 bg-black border border-gray-700 rounded-lg p-4 shadow-inner">
                     <h4 className="text-white font-semibold mb-2">AMR Machine Sequences:</h4>
                     <div className="space-y-2">
                       {schedulingResult.chromosome.amr_machine_sequences.map((amrSeq, idx) => (
@@ -650,24 +651,25 @@ const WarehouseApp = () => {
               </div>
             )}
           </div>
+
+          {/* Status Bar */}
+          <div className="bg-gray-900 border-t border-gray-700 px-5 py-3 flex justify-between items-center text-xs">
+            <span>{statusText}</span>
+            <span>
+              Machines: {machines.length} | Loading Dock: {loadingDock ? '✅' : '❌'} | Unloading Dock: {unloadingDock ? '✅' : '❌'}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Status Bar */}
-      <div className="bg-gray-900 border-t border-gray-700 px-5 py-3 flex justify-between items-center text-xs">
-        <span>{statusText}</span>
-        <span>
-          Machines: {machines.length} | Loading Dock: {loadingDock ? '✅' : '❌'} | Unloading Dock: {unloadingDock ? '✅' : '❌'}
-        </span>
-      </div>
-    {/* Footer */}
-    <footer className="bg-black border-t border-gray-800 px-5 py-4 text-center text-xs text-gray-400">
-      <div>
-        <a href="https://www.linkedin.com/in/tarun-gattu123" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">LinkedIn</a>
-        {' | '}
-        <a href="mailto:tarunrgattu@gmail.com" className="text-green-400 hover:underline">tarunrgattu@gmail.com</a>
-      </div>
-    </footer>
+      {/* Footer */}
+      <footer className="bg-black border-t border-gray-800 px-5 py-4 text-center text-xs text-gray-400">
+        <div>
+          <a href="https://www.linkedin.com/in/tarun-gattu123" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">LinkedIn</a>
+          {' | '}
+          <a href="mailto:tarunrgattu@gmail.com" className="text-green-400 hover:underline">tarunrgattu@gmail.com</a>
+        </div>
+      </footer>
     </div>
   );
 };
