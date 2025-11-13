@@ -10,7 +10,6 @@ const WarehouseApp = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragItem, setDragItem] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [machineCounter, setMachineCounter] = useState(0);
   const [distanceMatrix, setDistanceMatrix] = useState(null);
   const [statusText, setStatusText] = useState('Ready - Select a benchmark and start placing machines');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,13 +27,15 @@ const WarehouseApp = () => {
 
   const canvasRef = useRef(null);
   const gridSize = 40;
-  const API_BASE_URL = 'https://flask-backend-l0s9.onrender.com';
+  // const API_BASE_URL = 'https://flask-backend-l0s9.onrender.com';
+  const API_BASE_URL = 'http://10.1.10.13:10000/';
 
   // Fetch available benchmarks from backend
   useEffect(() => {
     const fetchBenchmarks = async () => {
       try {
-        const response = await fetch(`https://flask-backend-l0s9.onrender.com/api/benchmarks`);
+        // const response = await fetch(`https://flask-backend-l0s9.onrender.com/api/benchmarks`);
+        const response = await fetch(`/api/benchmarks`);
         const data = await response.json();
         if (data.success) {
           setAvailableBenchmarks(data.benchmarks);
@@ -56,7 +57,7 @@ const WarehouseApp = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Draw grid lines
-    ctx.strokeStyle = '#2a2a2a';
+    ctx.strokeStyle = '#d7d1d1ff';
     ctx.lineWidth = 1;
     
     for (let x = 0; x <= canvas.width; x += gridSize) {
@@ -195,18 +196,38 @@ const WarehouseApp = () => {
     }
   };
 
+  // Helper function to find the next available machine ID
+  const getNextAvailableMachineId = (currentMachines) => {
+    if (currentMachines.length === 0) {
+      return 0;
+    }
+    
+    // Extract and sort all existing IDs
+    const existingIds = currentMachines.map(m => m.id).sort((a, b) => a - b);
+    
+    // Find the first gap in the sequence
+    for (let i = 0; i < existingIds.length; i++) {
+      if (existingIds[i] !== i) {
+        return i;
+      }
+    }
+    
+    // If no gaps, return the next sequential number
+    return existingIds.length;
+  };
+
   // Machine management
   const addMachine = () => {
     const pos = snapToGrid(100 + (machines.length * 60), 200);
+    const newId = getNextAvailableMachineId(machines);
     const newMachine = {
-      id: machineCounter,
+      id: newId,
       x: pos.x,
       y: pos.y,
       selected: false
     };
     setMachines(prev => [...prev, newMachine]);
-    setMachineCounter(prev => prev + 1);
-    setStatusText(`Machine ${machineCounter} added`);
+    setStatusText(`Machine ${newId} added`);
   };
 
   const removeMachine = () => {
@@ -219,7 +240,6 @@ const WarehouseApp = () => {
 
   const clearLayout = () => {
     setMachines([]);
-    setMachineCounter(0);
     setLoadingDock({ x: 120, y: 120, type: 'loading' });
     setUnloadingDock({ x: 320, y: 120, type: 'unloading' });
     setDistanceMatrix(null);
@@ -228,35 +248,47 @@ const WarehouseApp = () => {
   };
 
   // Distance matrix generation
-  const generateDistanceMatrix = () => {
+  const generateDistanceMatrix = async () => {
     if (machines.length === 0 || !loadingDock || !unloadingDock) {
       setStatusText('Error: Need at least 1 machine, loading dock, and unloading dock');
       return null;
     }
     
-    const entities = [...machines, loadingDock, unloadingDock];
-    const n = entities.length;
-    const matrix = [];
+    setIsLoading(true);
+    setStatusText('Generating distance matrix...');
     
-    for (let i = 0; i < n; i++) {
-      const row = [];
-      for (let j = 0; j < n; j++) {
-        if (i === j) {
-          row.push(0);
-        } else {
-          const entity1 = entities[i];
-          const entity2 = entities[j];
-          const distance = Math.abs(entity1.x/gridSize - entity2.x/gridSize) + 
-                         Math.abs(entity1.y/gridSize - entity2.y/gridSize);
-          row.push(distance);
-        }
+    try {
+      const payload = {
+        machines: machines,
+        loadingDock: loadingDock,
+        unloadingDock: unloadingDock,
+        gridSize: gridSize
+      };
+      
+      const response = await fetch(`/api/generate-distance-matrix`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Failed to generate distance matrix');
       }
-      matrix.push(row);
+      
+      setDistanceMatrix(result.matrix);
+      setStatusText(`Distance matrix generated (${result.size}x${result.size})`);
+      return result.matrix;
+    } catch (error) {
+      setStatusText(`Error: ${error.message || 'Failed to generate distance matrix'}`);
+      console.error('Distance matrix generation error:', error);
+      return null;
+    } finally {
+      setIsLoading(false);
     }
-    
-    setDistanceMatrix(matrix);
-    setStatusText(`Distance matrix generated (${n}x${n})`);
-    return matrix;
   };
 
   // Run GA optimization
@@ -266,8 +298,11 @@ const WarehouseApp = () => {
       return;
     }
     
-    const matrix = generateDistanceMatrix();
-    if (!matrix) return;
+    // Use saved distance matrix from state
+    if (!distanceMatrix) {
+      setStatusText('Error: Please generate distance matrix first');
+      return;
+    }
     
     setIsLoading(true);
     setStatusText('Running genetic algorithm optimization...');
@@ -275,7 +310,7 @@ const WarehouseApp = () => {
     try {
       const payload = {
         benchmark_name: selectedBenchmark,
-        distance_matrix: matrix,
+        distance_matrix: distanceMatrix,
         m: machines.length,
         a: gaParams.numAMRs,
         N: gaParams.populationSize,
@@ -285,7 +320,8 @@ const WarehouseApp = () => {
         stagnation_limit: gaParams.stagnationLimit
       };
       
-      const response = await fetch(`https://flask-backend-l0s9.onrender.com/api/run`, {
+      // const response = await fetch(`https://flask-backend-l0s9.onrender.com/api/run`, {
+      const response = await fetch(`/api/run`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -293,11 +329,15 @@ const WarehouseApp = () => {
         body: JSON.stringify(payload)
       });
       
+      if (!response.ok) {
+        throw new Error('Failed to run optimization');
+      }
+      
       const result = await response.json();
       setSchedulingResult(result);
       setStatusText(`Optimization completed! Cmax: ${result.chromosome.Cmax}`);
     } catch (error) {
-      setStatusText('Error: Failed to run optimization');
+      setStatusText(`Error: ${error.message || 'Failed to run optimization'}`);
       console.error('Optimization error:', error);
     } finally {
       setIsLoading(false);
@@ -347,8 +387,8 @@ const WarehouseApp = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Job Shop Scheduler UI</h1>
-            <p className="text-sm text-gray-400">Dynamic Job Shop layout designer for Genetic Algorthm Solver</p>
-            <a href="https://www.growingscience.com/ijiec/Vol16/IJIEC_2025_3.pdf">Read About the Scheduler Here!</a>
+            <p className="text-sm text-gray-400">Dynamic Job Shop layout designer for Genetic Algorithm Solver</p>
+            <a href="https://www.growingscience.com/ijiec/Vol16/IJIEC_2025_3.pdf" target="_blank">Read About the Scheduler Here!</a>
           </div>
         </div>
         <div className="bg-gradient-to-r from-green-400 to-green-500 px-5 py-3 rounded-lg flex items-center gap-3 font-semibold text-sm shadow-lg">

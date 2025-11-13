@@ -2,7 +2,7 @@
   "name": "scheduling-frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://flask-backend-l0s9.onrender.com",
+  "proxy": "http://10.1.10.13:10000",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
