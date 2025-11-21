@@ -65,14 +65,13 @@ The algorithm and the concepts behind this project are the subject of a peer-rev
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/tarungattu/SchedulerWebApp.git
     cd SchedulerWebApp
     ```
 
 2.  **Setup the Backend:**
     ```bash
     cd server
-    pip install -r requirements.txt
     ```
 
 3.  **Setup the Frontend:**
